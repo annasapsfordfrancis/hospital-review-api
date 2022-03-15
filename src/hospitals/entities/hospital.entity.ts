@@ -1,30 +1,27 @@
 import { Review } from 'src/reviews/entities/review.entity';
 import {
-  Entity,
-  PrimaryGeneratedColumn,
   Column,
+  Entity,
   JoinTable,
   OneToMany,
+  PrimaryGeneratedColumn,
 } from 'typeorm';
 
 @Entity()
-export class User {
+export class Hospital {
   @PrimaryGeneratedColumn()
   id: number;
 
   @Column()
-  firstname: string;
+  name: string;
 
   @Column()
-  lastname: string;
+  location: string;
 
   @Column()
-  email: string;
-
-  @Column({ default: false })
-  isadmin: boolean;
+  description: string;
 
   @JoinTable()
-  @OneToMany((type) => Review, (review) => review.user)
+  @OneToMany((type) => Review, (review) => review.hospital)
   reviews: Review[];
 }
