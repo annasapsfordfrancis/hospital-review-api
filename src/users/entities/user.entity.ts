@@ -12,14 +12,14 @@ export class User {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
-  firstname: string;
+  @Column({ unique: true })
+  username: string;
 
-  @Column()
-  lastname: string;
-
-  @Column()
+  @Column({ unique: true })
   email: string;
+
+  @Column()
+  password: string;
 
   @Column({ default: false })
   isadmin: boolean;
