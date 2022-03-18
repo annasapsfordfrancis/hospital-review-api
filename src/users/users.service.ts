@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  ForbiddenException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { AuthService } from 'src/auth/auth.service';
 import { Repository } from 'typeorm';
@@ -34,19 +38,34 @@ export class UsersService {
     return await this.userRepository.save(user);
   }
 
-  async update(id: string, updateUserDto: UpdateUserDto) {
-    const user = await this.userRepository.preload({
-      id: +id,
+  async update(id: string, updateUserDto: UpdateUserDto, currentUser: User) {
+    const user = await this.findOne(id);
+    if (user.id !== currentUser.id && currentUser.isadmin === false) {
+      throw new ForbiddenException(
+        "You don't have permission to edit this user.",
+      );
+    }
+    if (
+      user.isadmin !== updateUserDto.isadmin &&
+      currentUser.isadmin === false
+    ) {
+      throw new ForbiddenException(
+        "You don't have permission to change admin priveleges for this user.",
+      );
+    }
+    return await this.userRepository.save({
+      ...user,
       ...updateUserDto,
     });
-    if (!user) {
-      throw new NotFoundException(`User #${id} not found.`);
-    }
-    return this.userRepository.save(user);
   }
 
-  async remove(id: string) {
+  async remove(id: string, currentUser: User) {
     const user = await this.findOne(id);
+    if (user.id !== currentUser.id && currentUser.isadmin === false) {
+      throw new ForbiddenException(
+        "You don't have permission to delete this user.",
+      );
+    }
     return this.userRepository.remove(user);
   }
 }

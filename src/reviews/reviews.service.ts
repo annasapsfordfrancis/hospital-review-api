@@ -56,9 +56,6 @@ export class ReviewsService {
     user: User,
   ) {
     const review = await this.findOne(id);
-    if (!review) {
-      throw new NotFoundException(`Review #${id} not found.`);
-    }
     if (review.user.id !== user.id && user.isadmin === false) {
       throw new ForbiddenException(
         "You don't have permission to edit this review.",

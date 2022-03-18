@@ -59,6 +59,21 @@ export class HospitalsController {
     return await this.reviewsService.findReviewsByHospital(hospital);
   }
 
+  @Post(':id/reviews')
+  @UseGuards(AuthGuardJwt)
+  async createReview(
+    @Param('id') hospitalId: string,
+    @CurrentUser() user: User,
+    @Body() createReviewDto: CreateReviewDto,
+  ) {
+    const hospital = await this.findOne(hospitalId);
+    return await this.reviewsService.createReview(
+      createReviewDto,
+      user,
+      hospital,
+    );
+  }
+
   @Get(':hospitalId/reviews/:reviewId')
   findOneReview(@Param('reviewId') id: string) {
     return this.reviewsService.findOne(id);
@@ -78,20 +93,5 @@ export class HospitalsController {
   @UseGuards(AuthGuardJwt)
   removeReview(@Param('reviewId') id: string, @CurrentUser() user: User) {
     return this.reviewsService.remove(id, user);
-  }
-
-  @Post(':id/new-review')
-  @UseGuards(AuthGuardJwt)
-  async createReview(
-    @Param('id') hospitalId: string,
-    @CurrentUser() user: User,
-    @Body() createReviewDto: CreateReviewDto,
-  ) {
-    const hospital = await this.findOne(hospitalId);
-    return await this.reviewsService.createReview(
-      createReviewDto,
-      user,
-      hospital,
-    );
   }
 }
