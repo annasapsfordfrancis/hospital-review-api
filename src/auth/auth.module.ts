@@ -7,6 +7,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { AuthService } from './auth.service';
 import { JwtStrategy } from './jwt.strategy';
 import { UsersModule } from 'src/users/users.module';
+import { UniqueValidator } from '../users/unique.validator';
 
 @Module({
   imports: [
@@ -21,7 +22,7 @@ import { UsersModule } from 'src/users/users.module';
       }),
     }),
   ],
-  providers: [LocalStrategy, JwtStrategy, AuthService],
+  providers: [LocalStrategy, JwtStrategy, AuthService, UniqueValidator],
   controllers: [AuthController],
   exports: [AuthService],
 })

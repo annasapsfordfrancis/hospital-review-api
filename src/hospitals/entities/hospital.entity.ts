@@ -22,6 +22,8 @@ export class Hospital {
   description: string;
 
   @JoinTable()
-  @OneToMany((type) => Review, (review) => review.hospital)
+  @OneToMany(() => Review, (review) => review.hospital, {
+    cascade: true,
+  })
   reviews: Review[];
 }

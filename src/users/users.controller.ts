@@ -37,31 +37,32 @@ export class UsersController {
 
   @Post()
   async create(@Body() createUserDto: CreateUserDto) {
-    const user = new User();
+    // const user = new User();
 
-    if (createUserDto.password !== createUserDto.retypedPassword) {
-      throw new BadRequestException(['Passwords are not identical.']);
-    }
+    // if (createUserDto.password !== createUserDto.retypedPassword) {
+    //   throw new BadRequestException(['Passwords are not identical.']);
+    // }
 
-    const existingUser = await this.userRepository.findOne({
-      where: [
-        { username: createUserDto.username },
-        { email: createUserDto.email },
-      ],
-    });
+    // const existingUser = await this.userRepository.findOne({
+    //   where: [
+    //     { username: createUserDto.username },
+    //     { email: createUserDto.email },
+    //   ],
+    // });
 
-    if (existingUser) {
-      throw new BadRequestException(['Username or email is already taken.']);
-    }
-    user.username = createUserDto.username;
-    user.password = await this.authService.hashPassword(createUserDto.password);
-    user.email = createUserDto.email;
-    user.isadmin = createUserDto.isadmin;
+    // if (existingUser) {
+    //   throw new BadRequestException(['Username or email is already taken.']);
+    // }
+    // user.username = createUserDto.username;
+    // user.password = await this.authService.hashPassword(createUserDto.password);
+    // user.email = createUserDto.email;
+    // user.isadmin = createUserDto.isadmin;
 
-    return {
-      ...(await this.userRepository.save(user)),
-      token: this.authService.getTokenForUser(user),
-    };
+    // return {
+    //   ...(await this.userRepository.save(user)),
+    //   token: this.authService.getTokenForUser(user),
+    // };
+    return await this.usersService.create(createUserDto);
   }
 
   @Patch(':id')

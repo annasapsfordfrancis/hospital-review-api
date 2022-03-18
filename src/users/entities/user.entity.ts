@@ -25,6 +25,8 @@ export class User {
   isadmin: boolean;
 
   @JoinTable()
-  @OneToMany((type) => Review, (review) => review.user)
+  @OneToMany(() => Review, (review) => review.user, {
+    cascade: true,
+  })
   reviews: Review[];
 }

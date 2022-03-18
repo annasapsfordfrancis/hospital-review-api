@@ -5,11 +5,13 @@ import {
   Get,
   Param,
   Patch,
-  Post,
+  UseGuards,
 } from '@nestjs/common';
-import { CreateReviewDto } from './dto/create-review.dto';
 import { UpdateReviewDto } from './dto/update-review.dto';
 import { ReviewsService } from './reviews.service';
+import { AuthGuardJwt } from 'src/auth/auth-guard.jwt';
+import { CurrentUser } from 'src/auth/current-user.decorator';
+import { User } from 'src/users/entities/user.entity';
 
 @Controller('reviews')
 export class ReviewsController {
@@ -25,18 +27,19 @@ export class ReviewsController {
     return this.reviewsService.findOne(id);
   }
 
-  @Post()
-  create(@Body() createReviewDto: CreateReviewDto) {
-    return this.reviewsService.create(createReviewDto);
-  }
-
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateReviewDto: UpdateReviewDto) {
-    return this.reviewsService.update(id, updateReviewDto);
+  @UseGuards(AuthGuardJwt)
+  updateReview(
+    @Param('id') id: string,
+    @CurrentUser() user: User,
+    @Body() updateReviewDto: UpdateReviewDto,
+  ) {
+    return this.reviewsService.update(id, updateReviewDto, user);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.reviewsService.remove(id);
+  @UseGuards(AuthGuardJwt)
+  removeReview(@Param('id') id: string, @CurrentUser() user: User) {
+    return this.reviewsService.remove(id, user);
   }
 }

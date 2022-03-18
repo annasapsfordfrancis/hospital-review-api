@@ -20,10 +20,14 @@ export class Review {
   review_text: string;
 
   @JoinTable()
-  @ManyToOne((type) => Hospital, (hospital) => hospital.reviews)
+  @ManyToOne(() => Hospital, (hospital) => hospital.reviews, {
+    onDelete: 'CASCADE',
+  })
   hospital: Hospital;
 
   @JoinTable()
-  @ManyToOne((type) => User, (user) => user.reviews)
+  @ManyToOne(() => User, (user) => user.reviews, {
+    onDelete: 'CASCADE',
+  })
   user: User;
 }
