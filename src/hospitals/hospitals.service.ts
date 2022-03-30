@@ -13,12 +13,16 @@ export class HospitalsService {
   ) {}
 
   findAll() {
-    return this.hospitalRepository.find({ relations: ['reviews'] });
+    return this.hospitalRepository.find({
+      relations: ['reviews'],
+      loadRelationIds: true,
+    });
   }
 
   async findOne(id: string) {
     const hospital = await this.hospitalRepository.findOne(id, {
       relations: ['reviews'],
+      loadRelationIds: true,
     });
     if (!hospital) {
       throw new NotFoundException(`Hospital #${id} not found.`);

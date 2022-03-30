@@ -19,12 +19,16 @@ export class ReviewsService {
   ) {}
 
   findAll() {
-    return this.reviewRepository.find({ relations: ['user', 'hospital'] });
+    return this.reviewRepository.find({
+      relations: ['user', 'hospital'],
+      loadRelationIds: true,
+    });
   }
 
   async findOne(id: string) {
     const review = await this.reviewRepository.findOne(id, {
       relations: ['user', 'hospital'],
+      loadRelationIds: true,
     });
     if (!review) {
       throw new NotFoundException(`Review #${id} not found.`);

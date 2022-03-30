@@ -19,12 +19,18 @@ export class UsersService {
   ) {}
 
   findAll() {
-    return this.userRepository.find({ relations: ['reviews'] });
+    return this.userRepository.find({
+      select: ['id', 'username', 'email', 'isadmin'],
+      relations: ['reviews'],
+      loadRelationIds: true,
+    });
   }
 
   async findOne(id: string) {
     const user = await this.userRepository.findOne(id, {
+      select: ['id', 'username', 'email', 'isadmin'],
       relations: ['reviews'],
+      loadRelationIds: true,
     });
     if (!user) {
       throw new NotFoundException(`User #${id} not found.`);
@@ -35,7 +41,7 @@ export class UsersService {
   async create(createUserDto: CreateUserDto) {
     const user = await this.userRepository.create(createUserDto);
     user.password = await this.authService.hashPassword(createUserDto.password);
-    return await this.userRepository.save(user);
+    await this.userRepository.save(user);
   }
 
   async update(id: string, updateUserDto: UpdateUserDto, currentUser: User) {
