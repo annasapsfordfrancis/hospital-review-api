@@ -46,8 +46,8 @@ export class ReviewsService {
     createReviewDto: CreateReviewDto,
     user: User,
     hospital: Hospital,
-  ): Promise<Review> {
-    return await this.reviewRepository.save({
+  ): Promise<any> {
+    await this.reviewRepository.save({
       ...createReviewDto,
       user,
       hospital,
